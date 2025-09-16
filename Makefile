@@ -35,17 +35,17 @@ all: $(BINARY)
 
 
 $(BINARY): $(CSRCS) $(SCALA_SRCS)
-	@echo "$(COLOR_YELLOW)[SCALA]$(COLOR_NONE) Zircon"
+	@printf "$(COLOR_YELLOW)[SCALA]$(COLOR_NONE) Zircon\n"
 	@$(MAKE) -s -j32 -C ../ sim-verilog
-	@echo "$(COLOR_DBLUE)[VERILATE]$(COLOR_NONE) $(notdir $(BUILD_DIR))/VCPU"
+	@printf "$(COLOR_DBLUE)[VERILATE]$(COLOR_NONE) $(notdir $(BUILD_DIR))/VCPU\n"
 	@mkdir -p $(BUILD_DIR)
 	@verilator $(VFLAGS) $(CSRCS) $(CINC_PATH) $(VERILOG_TOP)
-	@echo "$(COLOR_DBLUE)[MAKE]$(COLOR_NONE) $(notdir $(BUILD_DIR))/VCPU"
+	@printf "$(COLOR_DBLUE)[MAKE]$(COLOR_NONE) $(notdir $(BUILD_DIR))/VCPU\n"
 	@$(MAKE) -s -j32 -C $(BUILD_DIR) -f $(REWRITE) 
 
 
 run: $(BINARY) 
-	@echo "$(COLOR_YELLOW)[RUN]$(COLOR_NONE) build/$(notdir $<)"
+	@printf "$(COLOR_YELLOW)[RUN]$(COLOR_NONE) build/$(notdir $<)\n"
 	@$(BINARY) $(IMG) $(ARGS)
 
 
