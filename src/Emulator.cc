@@ -4,7 +4,7 @@
 #include <chrono>
 #include "utils.h"
 
-// #define DUMP_WAVE 0
+#define DUMP_WAVE 0
 
 void Emulator::reset() {
     cpu->reset = 1;
@@ -49,35 +49,35 @@ int Emulator::step(uint32_t num) {
     });
     printThread.detach();
     
-    uint8_t *cmtVlds[2] = {&cpu->io_dbg_cmt_robDeq_deq_0_valid, &cpu->io_dbg_cmt_robDeq_deq_1_valid};
-    uint32_t *cmtPCs[2] = {&cpu->io_dbg_cmt_robDeq_deq_0_bits_pc, &cpu->io_dbg_cmt_robDeq_deq_1_bits_pc};
-    uint8_t *cmtPrds[2] = {&cpu->io_dbg_cmt_robDeq_deq_0_bits_prd, &cpu->io_dbg_cmt_robDeq_deq_1_bits_prd};
-    uint32_t *dbgRf = &cpu->io_dbg_rf_rf_0;
+    // uint8_t *cmtVlds[2] = {&cpu->io_dbg_cmt_robDeq_deq_0_valid, &cpu->io_dbg_cmt_robDeq_deq_1_valid};
+    // uint32_t *cmtPCs[2] = {&cpu->io_dbg_cmt_robDeq_deq_0_bits_pc, &cpu->io_dbg_cmt_robDeq_deq_1_bits_pc};
+    // uint8_t *cmtPrds[2] = {&cpu->io_dbg_cmt_robDeq_deq_0_bits_prd, &cpu->io_dbg_cmt_robDeq_deq_1_bits_prd};
+    // uint32_t *dbgRf = &cpu->io_dbg_rf_rf_0;
     while(num-- > 0){
-        stat->addCycles(1);
-        for(int i = 0; i < NCOMMIT; i++){
-            if(stallForTooLong()){
-                return -3;
-            }
-            if(*cmtVlds[i]){
-                stallCount = 0;
-                stat->addInsts(1);
-                stat->pcBufferPush(*cmtPCs[i]);
-                uint32_t cmtInst = memory->debugRead(*cmtPCs[i]);
-                uint8_t cmtRd = bits(cmtInst, 11, 7);
-                if(simEnd(cmtInst)){
-                    return (dbgRf[rnmTable[10]] == 0 ? 0 : -1);
-                }
-                if(*cmtPrds[i] != 0){
-                    rnmTableUpdate(cmtRd, *cmtPrds[i]);
-                }
-                if(!difftestStep(cmtRd, dbgRf[rnmTable[cmtRd]], *cmtPCs[i], 1)){
-                    return -2;
-                }
-            }
+        // stat->addCycles(1);
+        // for(int i = 0; i < NCOMMIT; i++){
+        //     if(stallForTooLong()){
+        //         return -3;
+        //     }
+        //     if(*cmtVlds[i]){
+        //         stallCount = 0;
+        //         stat->addInsts(1);
+        //         stat->pcBufferPush(*cmtPCs[i]);
+        //         uint32_t cmtInst = memory->debugRead(*cmtPCs[i]);
+        //         uint8_t cmtRd = bits(cmtInst, 11, 7);
+        //         if(simEnd(cmtInst)){
+        //             return (dbgRf[rnmTable[10]] == 0 ? 0 : -1);
+        //         }
+        //         if(*cmtPrds[i] != 0){
+        //             rnmTableUpdate(cmtRd, *cmtPrds[i]);
+        //         }
+        //         if(!difftestStep(cmtRd, dbgRf[rnmTable[cmtRd]], *cmtPCs[i], 1)){
+        //             return -2;
+        //         }
+        //     }
             
 
-        }
+        // }
         memory->write(cpu);
         memory->read(cpu);
 

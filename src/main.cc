@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 
     Verilated::traceEverOn(true);
     VerilatedVcdC *m_trace = new VerilatedVcdC;
-    cpu->trace(m_trace, 5);
+    cpu->trace(m_trace, 1);
     m_trace->open("waveform.vcd");
 
     std::string imgPath = argv[1];
@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     std::cout << ANSI_FG_CYAN << "SIMULATION STARTED." << ANSI_NONE << std::endl;
 
     emulator->reset();
-    int ret = emulator->step(-1);
+    int ret = emulator->step(1000000);
 
     std::cout << "========================================" <<  std::endl;
     if(ret == -3) {
@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
     stat->printPerformance();
 
     std::string imgName = imgPath.substr(imgPath.find_last_of('/') + 1, imgPath.find_last_of('.') - imgPath.find_last_of('/') - 1);
-    stat->printMarkdownReport(cpu, imgName, simulator);
+    // stat->printMarkdownReport(cpu, imgName, simulator);
     std::cout <<  "========================================" << std::endl;
     m_trace->close();
     return ret;
